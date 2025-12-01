@@ -1,10 +1,13 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 function App() {
   const [length, setLength] = useState(8);
   const [numAllowed, setNumAllowed] = useState(false);
   const [charAllowed, setCharAllowed] = useState(false);
   const [password, setPassword] = useState("");
+
+  //useref hook for copy function
+  const passwordRef = useRef(null);
 
   const passwordGenerator = useCallback(() => {
     // create variables all those are js
@@ -22,6 +25,11 @@ function App() {
     }
     setPassword(pass);
   }, [length, numAllowed, charAllowed, setPassword]);
+
+  const copyPasswordtoClipboard = useCallback(() => {
+    window.navigator.clipboard.writeText(password);
+  }, [password]);
+
   // passwordGenerator(); // Too Many Render issues occurs when we directly call this function because of call back
 
   useEffect(() => {
@@ -41,8 +49,12 @@ function App() {
             className="outline-none w-full py-2 px-5 bg-white  "
             placeholder="Password"
             readOnly
+            ref={passwordRef}
           />
-          <button className="font-semibold outline-none bg-blue-700 text-white px-3 py-0.5 shrink-0 cursor-pointer">
+          <button
+            onClick={copyPasswordtoClipboard}
+            className="font-semibold outline-none bg-blue-700 text-white px-3 py-0.5 shrink-0 cursor-pointer"
+          >
             Copy
           </button>
         </div>
